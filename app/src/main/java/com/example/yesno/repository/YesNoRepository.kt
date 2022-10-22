@@ -43,8 +43,8 @@ class YesNoRepositoryImpl @Inject constructor() : YesNoRepository {
     }
 }
 
-//class YesNoRepositoryFailImpl @Inject constructor() : YesNoRepository {
-//    override suspend fun fetch(force: String?): Result<YesNo> {
-//        return Result.failure(Exception("TEST"))
-//    }
-//}
+class YesNoRepositoryFailImpl @Inject constructor() : YesNoRepository {
+    override suspend fun fetch(force: String?): YesNo {
+        throw Exception("TEST")
+    }
+}
