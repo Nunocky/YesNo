@@ -17,7 +17,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.example.yesno.CustomTestRunner"
     }
 
     buildTypes {
@@ -52,12 +52,19 @@ dependencies {
     implementation "com.google.dagger:hilt-android:${versions.hilt}"
     kapt "com.google.dagger:hilt-compiler:${versions.hilt}"
 
+    testImplementation "com.google.dagger:hilt-android-testing:${versions.hilt}"
+    kaptTest "com.google.dagger:hilt-android-compiler:${versions.hilt}"
+
+    androidTestImplementation "com.google.dagger:hilt-android-testing:${versions.hilt}"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:${versions.hilt}"
+
     implementation "androidx.activity:activity-ktx:${versions.activity_version}"
     implementation "androidx.fragment:fragment-ktx:${versions.fragment_version}"
     debugImplementation "androidx.fragment:fragment-testing:${versions.fragment_version}"
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutines}"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:${versions.coroutines}"
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:${versions.coroutines}"
 
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.lifecycle_version}"

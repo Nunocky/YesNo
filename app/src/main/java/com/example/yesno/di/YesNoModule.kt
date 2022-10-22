@@ -1,7 +1,6 @@
 package com.example.yesno.di
 
-import com.example.yesno.repository.YesNoRepository
-import com.example.yesno.repository.YesNoRepositoryImpl
+import com.example.yesno.repository.*
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -12,5 +11,8 @@ import dagger.hilt.components.SingletonComponent
 abstract class YesNoModule {
     @Binds
     abstract fun bindYesNoRepository(repository: YesNoRepositoryImpl): YesNoRepository
-    //abstract fun bindYesNoRepository(repository: YesNoRepositoryFailImpl): YesNoRepository
+    //abstract fun bindYesNoRepository(repository: YesNoRepositoryImplYes): YesNoRepository
+    //abstract fun bindYesNoRepository(repository: YesNoRepositoryImplNo): YesNoRepository
+    //abstract fun bindYesNoRepository(repository: YesNoRepositoryImplMaybe): YesNoRepository
+    //abstract fun bindYesNoRepository(repository: YesNoRepositoryImplFail): YesNoRepository
 }
