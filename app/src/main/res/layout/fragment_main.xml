@@ -48,6 +48,6 @@
 
         <variable
             name="viewModel"
-            type="com.example.yesno.MainViewModel" />
+            type="com.example.yesno.scene.main.MainViewModel" />
     </data>
 </layout>

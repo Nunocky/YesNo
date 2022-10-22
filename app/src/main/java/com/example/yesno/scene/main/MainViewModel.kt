@@ -1,4 +1,4 @@
-package com.example.yesno
+package com.example.yesno.scene.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
