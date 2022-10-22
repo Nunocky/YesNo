@@ -33,13 +33,24 @@ class YesNoRepositoryImpl @Inject constructor() : YesNoRepository {
         .create(YesNoService::class.java)
 
     override suspend fun fetch(force: String?): Result<YesNo> {
-        val response = service.fetch(force)
 
-        if (response.isSuccessful) {
-            val body = response.body()
-            return if (body != null) Result.success(body) else Result.failure(IOException("no body"))
+        try {
+            val response = service.fetch(force)
+
+            if (response.isSuccessful) {
+                val body = response.body()
+                return if (body != null) Result.success(body) else Result.failure(IOException("no body"))
+            }
+
+            return Result.failure(Exception(response.message()))
+        } catch (ex: Exception) {
+            return Result.failure(ex)
         }
-
-        return Result.failure(IOException(response.message()))
     }
 }
+
+//class YesNoRepositoryFailImpl @Inject constructor() : YesNoRepository {
+//    override suspend fun fetch(force: String?): Result<YesNo> {
+//        return Result.failure(Exception("TEST"))
+//    }
+//}

@@ -12,4 +12,5 @@ import dagger.hilt.components.SingletonComponent
 abstract class YesNoModule {
     @Binds
     abstract fun bindYesNoRepository(repository: YesNoRepositoryImpl): YesNoRepository
+    //abstract fun bindYesNoRepository(repository: YesNoRepositoryFailImpl): YesNoRepository
 }

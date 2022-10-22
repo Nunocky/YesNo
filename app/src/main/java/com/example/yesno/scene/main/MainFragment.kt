@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -20,9 +21,7 @@ class MainFragment : Fragment() {
     private val viewModel: MainViewModel by viewModels()
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
@@ -48,6 +47,15 @@ class MainFragment : Fragment() {
 
                     is MainViewModel.FetchState.Fail -> {
                         binding.imageView.setImageBitmap(null)
+                        val dialog = AlertDialog.Builder(requireActivity())
+                            .setTitle("Error")
+                            .setMessage("Fetch failed")
+                            .setPositiveButton("Close") { d, v ->
+                                d.dismiss()
+                            }
+                            .create()
+
+                        dialog.show()
                     }
                 }
             }
