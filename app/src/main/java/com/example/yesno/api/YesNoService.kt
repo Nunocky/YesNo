@@ -26,6 +26,6 @@ data class YesNo(
 interface YesNoService {
     @GET("api")
     suspend fun fetch(
-        @Query("query") query: String? = null
+        @Query("force") force: String? = null
     ): Response<YesNo>
 }

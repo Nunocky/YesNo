@@ -11,14 +11,16 @@ import java.io.IOException
 import javax.inject.Inject
 
 // curl https://yesno.wtf/api
-//{"answer":"no","forced":false,"image":"https://yesno.wtf/assets/no/12-dafd576be23d3768641340f76658ddfe.gif"}%
+
+// {"answer":"yes","forced":false,"image":"https://yesno.wtf/assets/yes/5-64c2804cc48057b94fd0b3eaf323d92c.gif"}%
+// {"answer":"no","forced":false,"image":"https://yesno.wtf/assets/no/12-dafd576be23d3768641340f76658ddfe.gif"}%
 
 // option : force = yes / no / maybe
 // curl https://yesno.wtf/api?force=maybe
 //{"answer":"maybe","forced":true,"image":"https://yesno.wtf/assets/maybe/1-77b7fe92ff17b15ab4537c2bfafe16d1.gif"}%
 
 interface YesNoRepository {
-    suspend fun fetch(): Result<YesNo>
+    suspend fun fetch(force: String? = null): Result<YesNo>
 }
 
 class YesNoRepositoryImpl @Inject constructor() : YesNoRepository {
@@ -30,8 +32,8 @@ class YesNoRepositoryImpl @Inject constructor() : YesNoRepository {
         .addConverterFactory(MoshiConverterFactory.create(moshi)).build()
         .create(YesNoService::class.java)
 
-    override suspend fun fetch(): Result<YesNo> {
-        val response = service.fetch()
+    override suspend fun fetch(force: String?): Result<YesNo> {
+        val response = service.fetch(force)
 
         if (response.isSuccessful) {
             val body = response.body()
