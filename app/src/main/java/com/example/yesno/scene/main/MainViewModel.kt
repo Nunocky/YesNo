@@ -3,8 +3,8 @@ package com.example.yesno.scene.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.yesno.api.YesNoRepository
-import com.example.yesno.data.YesNo
+import com.example.yesno.api.YesNo
+import com.example.yesno.repository.YesNoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
