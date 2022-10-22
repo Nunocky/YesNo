@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,17 +39,14 @@ class MainViewModel @Inject constructor(
         }
     }.asLiveData()
 
-    fun processFetch() = viewModelScope.launch(Dispatchers.IO) {
+    fun processFetch() = viewModelScope.launch {
 
         _fetchState.value = FetchState.Fetching
 
-        val response = repository.fetch()
-
-        response
-            .onSuccess {
-                _fetchState.value = FetchState.Success(it)
-            }.onFailure {
-                _fetchState.value = FetchState.Fail(it)
-            }
+        withContext(Dispatchers.IO) {
+            runCatching { repository.fetch() }
+                .onSuccess { _fetchState.value = FetchState.Success(it) }
+                .onFailure { _fetchState.value = FetchState.Fail(it) }
+        }
     }
 }

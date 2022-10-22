@@ -20,7 +20,7 @@ import javax.inject.Inject
 //{"answer":"maybe","forced":true,"image":"https://yesno.wtf/assets/maybe/1-77b7fe92ff17b15ab4537c2bfafe16d1.gif"}%
 
 interface YesNoRepository {
-    suspend fun fetch(force: String? = null): Result<YesNo>
+    suspend fun fetch(force: String? = null): YesNo
 }
 
 class YesNoRepositoryImpl @Inject constructor() : YesNoRepository {
@@ -32,20 +32,14 @@ class YesNoRepositoryImpl @Inject constructor() : YesNoRepository {
         .addConverterFactory(MoshiConverterFactory.create(moshi)).build()
         .create(YesNoService::class.java)
 
-    override suspend fun fetch(force: String?): Result<YesNo> {
+    override suspend fun fetch(force: String?): YesNo {
+        val response = service.fetch(force)
 
-        try {
-            val response = service.fetch(force)
-
-            if (response.isSuccessful) {
-                val body = response.body()
-                return if (body != null) Result.success(body) else Result.failure(IOException("no body"))
-            }
-
-            return Result.failure(Exception(response.message()))
-        } catch (ex: Exception) {
-            return Result.failure(ex)
+        if (response.isSuccessful) {
+            return response.body() ?: throw IOException("no body")
         }
+
+        throw Exception(response.message())
     }
 }
 
