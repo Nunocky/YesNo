@@ -36,6 +36,18 @@ android {
     buildFeatures() {
         dataBinding true
     }
+    packagingOptions {
+        exclude 'META-INF/LICENSE.md'
+        exclude 'META-INF/LICENSE-notice.md'
+    }
+
+    testOptions {
+        packagingOptions {
+            jniLibs {
+                useLegacyPackaging = true
+            }
+        }
+    }
 }
 
 dependencies {
@@ -132,7 +144,12 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:${versions.glide}"
     annotationProcessor "com.github.bumptech.glide:compiler:${versions.glide}"
 
-    testImplementation "com.google.truth:truth:${versions.truth}"
-    testImplementation "com.google.truth.extensions:truth-java8-extension:${versions.truth}"
-    testImplementation "androidx.test.ext:truth:${versions.ext_truth}"
+    androidTestImplementation "com.google.truth:truth:${versions.truth}"
+    androidTestImplementation "com.google.truth.extensions:truth-java8-extension:${versions.truth}"
+    androidTestImplementation "androidx.test.ext:truth:${versions.ext_truth}"
+
+    testImplementation "io.mockk:mockk-android:${versions.mockkVersion}"
+    testImplementation "io.mockk:mockk-agent:${versions.mockkVersion}"
+    androidTestImplementation "io.mockk:mockk-android:${versions.mockkVersion}"
+    androidTestImplementation "io.mockk:mockk-agent:${versions.mockkVersion}"
 }

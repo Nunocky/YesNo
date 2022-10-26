@@ -18,7 +18,7 @@ class MainFragment : Fragment() {
     private val binding: FragmentMainBinding
         get() = _binding!!
 
-    private val viewModel: MainViewModel by viewModels()
+    val viewModel: MainViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
