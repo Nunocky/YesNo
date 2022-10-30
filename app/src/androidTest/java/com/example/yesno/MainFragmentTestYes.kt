@@ -3,18 +3,14 @@ package com.example.yesno
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
 import com.example.yesno.di.YesNoDataSourceModule
 import com.example.yesno.repository.YesNoDataSource
 import com.example.yesno.scene.main.MainFragment
 import com.example.yesno.scene.main.MainViewModel
 import com.google.common.truth.Truth.assertThat
-import dagger.Binds
-import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -33,12 +29,16 @@ import org.junit.Test
 @HiltAndroidTest
 class MainFragmentTestYes {
 
-    @Module
-    @InstallIn(ViewModelComponent::class)
-    abstract class FakeYesDataSourceModule {
-        @Binds
-        abstract fun bindYesNoDataSource(dataSource: FakeYesDataSource): YesNoDataSource
-    }
+//    @Module
+//    @InstallIn(ViewModelComponent::class)
+//    abstract class FakeYesDataSourceModule {
+//        @Binds
+//        abstract fun bindYesNoDataSource(dataSource: FakeYesDataSource): YesNoDataSource
+//    }
+
+    @BindValue
+    @JvmField
+    val dataSource: YesNoDataSource = FakeYesDataSource()
 
     @get:Rule(order = 0)
     var hiltRule = HiltAndroidRule(this)

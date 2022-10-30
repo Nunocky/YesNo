@@ -15,6 +15,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -33,12 +34,16 @@ import org.junit.Test
 @HiltAndroidTest
 class MainFragmentTestMaybe {
 
-    @Module
-    @InstallIn(ViewModelComponent::class)
-    abstract class FakeYesDataSourceModule {
-        @Binds
-        abstract fun bindYesNoDataSource(dataSource: FakeMaybeDataSource): YesNoDataSource
-    }
+//    @Module
+//    @InstallIn(ViewModelComponent::class)
+//    abstract class FakeYesDataSourceModule {
+//        @Binds
+//        abstract fun bindYesNoDataSource(dataSource: FakeMaybeDataSource): YesNoDataSource
+//    }
+
+    @BindValue
+    @JvmField
+    val dataSource : YesNoDataSource = FakeMaybeDataSource()
 
     @get:Rule(order = 0)
     var hiltRule = HiltAndroidRule(this)

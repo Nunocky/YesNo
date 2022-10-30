@@ -2,9 +2,13 @@ package com.example.yesno
 
 import com.example.yesno.data.YesNo
 import com.example.yesno.repository.YesNoDataSource
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import java.io.IOException
 import javax.inject.Inject
+
+private const val waitMs = 500L
 
 /**
  *
@@ -12,14 +16,9 @@ import javax.inject.Inject
 class FakeYesDataSource @Inject constructor() : YesNoDataSource {
     override suspend fun fetch(force: String?): YesNo {
 
-        runBlocking {
-            Thread.sleep(300) // MEMO 300より小さいとうまくいかない。なぜ?
+        withContext(Dispatchers.Main) {
+            delay(waitMs)
         }
-
-        // こちらでもいいけど時間はこれ以上短くできない
-//        withContext(Dispatchers.Main) {
-//            delay(300)
-//        }
 
         return YesNo(
             answer = "yes",
@@ -35,9 +34,10 @@ class FakeYesDataSource @Inject constructor() : YesNoDataSource {
 class FakeNoDataSource @Inject constructor() : YesNoDataSource {
     override suspend fun fetch(force: String?): YesNo {
 
-        runBlocking {
-            Thread.sleep(300) // MEMO 300より小さいとうまくいかない。なぜ?
+        withContext(Dispatchers.Main) {
+            delay(waitMs)
         }
+
         return YesNo(
             answer = "no",
             forced = false,
@@ -52,9 +52,10 @@ class FakeNoDataSource @Inject constructor() : YesNoDataSource {
 class FakeMaybeDataSource @Inject constructor() : YesNoDataSource {
     override suspend fun fetch(force: String?): YesNo {
 
-        runBlocking {
-            Thread.sleep(300) // MEMO 300より小さいとうまくいかない。なぜ?
+        withContext(Dispatchers.Main) {
+            delay(waitMs)
         }
+
         return YesNo(
             answer = "maybe",
             forced = false,
@@ -69,8 +70,8 @@ class FakeMaybeDataSource @Inject constructor() : YesNoDataSource {
 class FakeNetworkErrorDataSource @Inject constructor() : YesNoDataSource {
     override suspend fun fetch(force: String?): YesNo {
 
-        runBlocking {
-            Thread.sleep(300) // MEMO 300より小さいとうまくいかない。なぜ?
+        withContext(Dispatchers.Main) {
+            delay(waitMs)
         }
 
         throw IOException("TEST")
