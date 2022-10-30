@@ -6,7 +6,6 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.filters.LargeTest
-import com.example.yesno.data.YesNo
 import com.example.yesno.di.YesNoDataSourceModule
 import com.example.yesno.repository.YesNoDataSource
 import com.example.yesno.scene.main.MainFragment
@@ -23,27 +22,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import javax.inject.Inject
 import javax.inject.Singleton
-
-class FakeYesDataSource @Inject constructor() : YesNoDataSource {
-    override suspend fun fetch(force: String?): YesNo {
-
-        runBlocking {
-            Thread.sleep(300) // MEMO 300より小さいとうまくいかない。なぜ?
-        }
-        return YesNo(
-            answer = "yes",
-            forced = false,
-            image = "https://yesno.wtf/assets/yes/5-64c2804cc48057b94fd0b3eaf323d92c.gif"
-        )
-    }
-}
 
 @LargeTest
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -68,7 +51,7 @@ class MainFragmentTestYes {
     }
 
     @Test
-    fun testSuccess() = runTest {
+    fun testClickButton() = runTest {
 
         lateinit var fetchState: StateFlow<MainViewModel.FetchState>
 

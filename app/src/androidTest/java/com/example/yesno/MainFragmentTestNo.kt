@@ -31,19 +31,6 @@ import org.junit.Test
 import javax.inject.Inject
 import javax.inject.Singleton
 
-class FakeNoDataSource @Inject constructor() : YesNoDataSource {
-    override suspend fun fetch(force: String?): YesNo {
-
-        runBlocking {
-            Thread.sleep(300) // MEMO 300より小さいとうまくいかない。なぜ?
-        }
-        return YesNo(
-            answer = "no",
-            forced = false,
-            image = "https://yesno.wtf/assets/no/12-dafd576be23d3768641340f76658ddfe.gif"
-        )
-    }
-}
 
 @LargeTest
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -68,7 +55,7 @@ class MainFragmentTestNo {
     }
 
     @Test
-    fun testSuccess() = runTest {
+    fun testClickButton() = runTest {
 
         lateinit var fetchState: StateFlow<MainViewModel.FetchState>
 

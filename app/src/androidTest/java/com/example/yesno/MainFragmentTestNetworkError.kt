@@ -29,22 +29,6 @@ import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 
-class FakeNetworkErrorDataSource @Inject constructor() : YesNoDataSource {
-    override suspend fun fetch(force: String?): YesNo {
-
-        runBlocking {
-            Thread.sleep(300) // MEMO 300より小さいとうまくいかない。なぜ?
-        }
-
-        // こちらでもいいけど時間はこれ以上短くできない
-//        withContext(Dispatchers.Main) {
-//            delay(300)
-//        }
-
-        throw IOException("TEST")
-    }
-}
-
 @LargeTest
 @OptIn(ExperimentalCoroutinesApi::class)
 @UninstallModules(YesNoDataSourceModule::class)
@@ -68,7 +52,7 @@ class MainFragmentTestNetworkError {
     }
 
     @Test
-    fun testSuccess() = runTest {
+    fun testClickButton() = runTest {
 
         lateinit var fetchState: StateFlow<MainViewModel.FetchState>
 
