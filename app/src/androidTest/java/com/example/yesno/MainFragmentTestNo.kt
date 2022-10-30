@@ -14,10 +14,10 @@ import com.google.common.truth.Truth.assertThat
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
-import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.take
@@ -26,7 +26,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import javax.inject.Singleton
 
 
 @LargeTest
@@ -36,9 +35,8 @@ import javax.inject.Singleton
 class MainFragmentTestNo {
 
     @Module
-    @InstallIn(SingletonComponent::class)
+    @InstallIn(ViewModelComponent::class)
     abstract class FakeYesDataSourceModule {
-        @Singleton
         @Binds
         abstract fun bindYesNoDataSource(dataSource: FakeNoDataSource): YesNoDataSource
     }
