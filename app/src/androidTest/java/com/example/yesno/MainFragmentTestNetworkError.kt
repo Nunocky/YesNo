@@ -2,7 +2,9 @@ package com.example.yesno
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
 import com.example.yesno.di.YesNoDataSourceModule
 import com.example.yesno.repository.YesNoDataSource
@@ -61,7 +63,11 @@ class MainFragmentTestNetworkError {
         assertThat(list[0]).isInstanceOf(MainViewModel.FetchState.Fetching::class.java)
         assertThat(list[1]).isInstanceOf(MainViewModel.FetchState.Fail::class.java)
 
-        // TODO ダイアログが表示されてタイトルが "Error"となっていること をテスト
-//        onView(withId(R.id.textView)).check(matches(withText("Failed")))
+        // ダイアログが表示されてタイトルが "Error"となっていること をテスト
+        onView(withText("Error")).check(matches(isDisplayed()))
+
+        // Close ボタンを押したらダイアログが消える
+        onView(withText("Close")).perform(click())
+        onView(withText("Error")).check(doesNotExist())
     }
 }
