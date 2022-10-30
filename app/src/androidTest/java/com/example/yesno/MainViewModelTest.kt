@@ -1,9 +1,9 @@
 package com.example.yesno
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.example.yesno.api.YesNo
+import com.example.yesno.data.YesNo
 import com.example.yesno.repository.YesNoRepository
-import com.example.yesno.repository.YesNoRepositoryImpl
+import com.example.yesno.repository.DefaultYesNoRepository
 import com.example.yesno.scene.main.MainViewModel
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -42,7 +42,7 @@ class MainViewModelTest {
      */
     @Test
     fun testOnline() {
-        val viewModel = MainViewModel(YesNoRepositoryImpl())
+        val viewModel = MainViewModel(DefaultYesNoRepository())
 
         runBlocking {
             viewModel.processFetch()

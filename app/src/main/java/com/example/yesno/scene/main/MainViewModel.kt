@@ -3,7 +3,7 @@ package com.example.yesno.scene.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.yesno.api.YesNo
+import com.example.yesno.data.YesNo
 import com.example.yesno.repository.YesNoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -44,9 +44,13 @@ class MainViewModel @Inject constructor(
         _fetchState.value = FetchState.Fetching
 
         withContext(Dispatchers.IO) {
-            runCatching { repository.fetch() }
-                .onSuccess { _fetchState.value = FetchState.Success(it) }
-                .onFailure { _fetchState.value = FetchState.Fail(it) }
+            repository.fetch()
+                .onSuccess {
+                    _fetchState.value = FetchState.Success(it)
+                }
+                .onFailure {
+                    _fetchState.value = FetchState.Fail(it)
+                }
         }
     }
 }

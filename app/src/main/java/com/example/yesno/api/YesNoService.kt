@@ -1,6 +1,6 @@
 package com.example.yesno.api
 
-import com.squareup.moshi.Json
+import com.example.yesno.data.YesNo
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -11,17 +11,6 @@ import retrofit2.http.Query
 //  "forced": false,
 //  "image": "https://yesno.wtf/assets/yes/2.gif"
 //}
-
-data class YesNo(
-    @Json(name = "answer")
-    val answer: String,
-
-    @Json(name = "forced")
-    val forced: Boolean,
-
-    @Json(name = "image")
-    val image: String,
-)
 
 interface YesNoService {
     @GET("api")

@@ -1,79 +1,43 @@
 package com.example.yesno
 
-import com.example.yesno.repository.YesNoRepository
-import com.example.yesno.repository.YesNoRepositoryImpl
+import com.example.yesno.repository.DefaultYesNoDataSource
+import com.example.yesno.repository.DefaultYesNoRepository
+import com.example.yesno.repository.YesNoDataSource
 import com.google.common.truth.Truth.assertThat
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import okhttp3.OkHttpClient
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
-/**
- * Test of YesNoRepository
- *
- * notice : Run this test online.
- */
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(JUnit4::class)
 class YesNoRepositoryTest {
-    @OptIn(ExperimentalCoroutinesApi::class)
+
     @Test
-    fun testCallApi() {
-        runTest {
+    fun testForceYes() = runTest {
+        val okHttpClient = OkHttpClient.Builder().build()
+        val dataSource = DefaultYesNoDataSource(okHttpClient)
+        val repository = DefaultYesNoRepository(dataSource)
 
-            val repository: YesNoRepository = YesNoRepositoryImpl()
+        val result = repository.fetch(force = "yes")
 
-            // DDos attackになるのでやらないほうがいい
-            // repeat(3) {
-            val result = repository.fetch()
-
-            assertThat(result.isSuccess).isTrue()
-            assertThat(result.getOrNull()?.answer).isAnyOf("yes", "no", "maybe")
-            assertThat(result.getOrNull()?.forced).isEqualTo(false)
-            assertThat(result.getOrNull()?.image).isNotNull()
-            // }
-        }
+        assertThat(result.isSuccess).isTrue()
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun testCallApiWithQueryYes() {
-        runTest {
-            val repository: YesNoRepository = YesNoRepositoryImpl()
-            val result = repository.fetch(force = "yes")
+    fun testNetworkError() = runTest {
+        val dataSource = mockk<YesNoDataSource>()
+        coEvery { dataSource.fetch(force = any()) } throws Throwable()
+        val repository = DefaultYesNoRepository(dataSource)
 
-            assertThat(result.isSuccess).isTrue()
-            assertThat(result.getOrNull()?.answer).isEqualTo("yes")
-            assertThat(result.getOrNull()?.forced).isEqualTo(true)
-            assertThat(result.getOrNull()?.image).isNotNull()
-        }
-    }
+        val result = repository.fetch(force = "yes")
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @Test
-    fun testCallApiWithQueryNo() {
-        runTest {
-            val repository: YesNoRepository = YesNoRepositoryImpl()
-            val result = repository.fetch(force = "no")
-
-            assertThat(result.isSuccess).isTrue()
-            assertThat(result.getOrNull()?.answer).isEqualTo("no")
-            assertThat(result.getOrNull()?.forced).isEqualTo(true)
-            assertThat(result.getOrNull()?.image).isNotNull()
-        }
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @Test
-    fun testCallApiWithQueryMaybe() {
-        runTest {
-            val repository: YesNoRepository = YesNoRepositoryImpl()
-            val result = repository.fetch(force = "maybe")
-
-            assertThat(result.isSuccess).isTrue()
-            assertThat(result.getOrNull()?.answer).isEqualTo("maybe")
-            assertThat(result.getOrNull()?.forced).isEqualTo(true)
-            assertThat(result.getOrNull()?.image).isNotNull()
-        }
+        coVerify { dataSource.fetch(any()) }
+        assertThat(result.isFailure).isTrue()
     }
 }
