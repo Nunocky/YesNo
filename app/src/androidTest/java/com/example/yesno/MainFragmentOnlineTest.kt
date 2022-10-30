@@ -22,7 +22,7 @@ import org.junit.Test
 @LargeTest
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltAndroidTest
-class MainFragmentOnLineTest {
+class MainFragmentOnlineTest {
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
