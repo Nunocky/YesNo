@@ -4,7 +4,6 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.filters.LargeTest
-import com.example.yesno.data.YesNo
 import com.example.yesno.di.YesNoDataSourceModule
 import com.example.yesno.repository.YesNoDataSource
 import com.example.yesno.scene.main.MainFragment
@@ -25,8 +24,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.io.IOException
-import javax.inject.Inject
 import javax.inject.Singleton
 
 @LargeTest
