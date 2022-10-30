@@ -8,6 +8,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.example.yesno.databinding.FragmentMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,7 +42,15 @@ class MainFragment : Fragment() {
                     }
 
                     is MainViewModel.FetchState.Success -> {
-                        Glide.with(requireActivity()).load(state.yesno.image)
+
+                        val circularProgressDrawable = CircularProgressDrawable(requireActivity())
+                        circularProgressDrawable.strokeWidth = 5f
+                        circularProgressDrawable.centerRadius = 30f
+                        circularProgressDrawable.start()
+
+                        Glide.with(requireActivity())
+                            .load(state.yesno.image)
+                            .placeholder(circularProgressDrawable)
                             .into(binding.imageView)
                     }
 
