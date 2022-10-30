@@ -9,12 +9,8 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class YesNoModule {
+abstract class YesNoRepositoryModule {
     @Singleton
     @Binds
     abstract fun bindYesNoRepository(repository: DefaultYesNoRepository): YesNoRepository
-
-    @Singleton
-    @Binds
-    abstract fun bindYesNoDataSource(dataSource: DefaultYesNoDataSource): YesNoDataSource
 }
