@@ -2,8 +2,8 @@ package com.example.yesno
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.filters.LargeTest
 import com.example.yesno.scene.main.MainFragment
 import com.example.yesno.scene.main.MainViewModel
@@ -40,19 +40,13 @@ class MainFragmentOnlineTest {
             fetchState = (this as MainFragment).viewModel.fetchState
         }
 
-        onView(ViewMatchers.withId(R.id.button)).perform(ViewActions.click())
+        onView(withId(R.id.button)).perform(ViewActions.click())
 
         val list = fetchState.take(2).toList()
         assertThat(list[0]).isInstanceOf(MainViewModel.FetchState.Fetching::class.java)
         assertThat(list[1]).isInstanceOf(MainViewModel.FetchState.Success::class.java)
 
-        onView(ViewMatchers.withId(R.id.textView))
-            .check(
-                ViewAssertions.matches(
-                    MultiTextMatcher.withTexts(
-                        arrayOf("yes", "no", "maybe")
-                    )
-                )
-            )
+        onView(withId(R.id.textView))
+            .check(matches(MultiTextMatcher.withTexts(arrayOf("yes", "no", "maybe"))))
     }
 }

@@ -11,10 +11,6 @@ import com.example.yesno.repository.YesNoDataSource
 import com.example.yesno.scene.main.MainFragment
 import com.example.yesno.scene.main.MainViewModel
 import com.google.common.truth.Truth.assertThat
-import dagger.Binds
-import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -43,7 +39,7 @@ class MainFragmentTestMaybe {
 
     @BindValue
     @JvmField
-    val dataSource : YesNoDataSource = FakeMaybeDataSource()
+    val dataSource: YesNoDataSource = FakeMaybeDataSource()
 
     @get:Rule(order = 0)
     var hiltRule = HiltAndroidRule(this)
