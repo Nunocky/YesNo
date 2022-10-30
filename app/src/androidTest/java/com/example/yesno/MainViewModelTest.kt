@@ -2,23 +2,27 @@ package com.example.yesno
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.yesno.data.YesNo
-import com.example.yesno.repository.YesNoRepository
+import com.example.yesno.repository.DefaultYesNoDataSource
 import com.example.yesno.repository.DefaultYesNoRepository
+import com.example.yesno.repository.YesNoDataSource
 import com.example.yesno.scene.main.MainViewModel
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidTest
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.mockk
+import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import okhttp3.OkHttpClient
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import java.io.IOException
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltAndroidTest
@@ -41,103 +45,117 @@ class MainViewModelTest {
      * オンラインでのテスト
      */
     @Test
-    fun testOnline() {
-        val viewModel = MainViewModel(DefaultYesNoRepository())
+    fun testOnline() = runTest {
+        val okHttpClient = OkHttpClient.Builder().build()
+        val dataSource = DefaultYesNoDataSource(okHttpClient)
+        val viewModel = MainViewModel(DefaultYesNoRepository(dataSource))
 
-        runBlocking {
-            viewModel.processFetch()
-            Thread.sleep(1500)
-        }
+        viewModel.processFetch()
 
-        assertThat(viewModel.fetchState.value).isInstanceOf(MainViewModel.FetchState.Success::class.java)
+        val list = viewModel.fetchState.take(2).toList()
+        assertThat(list[0]).isInstanceOf(MainViewModel.FetchState.Fetching::class.java)
+        assertThat(list[1]).isInstanceOf(MainViewModel.FetchState.Success::class.java)
 
-        val state = viewModel.fetchState.value as MainViewModel.FetchState.Success
-        assertThat(state.yesno.answer).isAnyOf("yes", "no", "maybe")
+        val yesno = (list[1] as MainViewModel.FetchState.Success).yesno
+        assertThat(yesno.answer).isAnyOf("yes", "no", "maybe")
+        assertThat(yesno.forced).isFalse()
+        assertThat(yesno.image).isNotEmpty()
     }
 
     @Test
-    fun testYes() {
-        // 必ず yesを返すモックオブジェクトを作る
-        val mockRepository = mockk<YesNoRepository>()
-        coEvery { mockRepository.fetch() } returns YesNo(
-            answer = "yes",
-            forced = false,
-            image = "https://yesno.wtf/assets/yes/5-64c2804cc48057b94fd0b3eaf323d92c.gif"
-        )
+    fun testYes() = runTest {
+        val dataSource = mockk<YesNoDataSource>()
 
-        val viewModel = MainViewModel(mockRepository)
+        coEvery { dataSource.fetch() } coAnswers {
+            delay(30)
 
-        runBlocking {
-            viewModel.processFetch()
-            coVerify { mockRepository.fetch() }
+            YesNo(
+                answer = "yes",
+                forced = false,
+                image = "https://yesno.wtf/assets/yes/5-64c2804cc48057b94fd0b3eaf323d92c.gif"
+            )
         }
-        // TODO viewModel.fetchState を observeする
-        //      mokK, spekを学ぶ必要がありそう
-        assert(viewModel.fetchState.value is MainViewModel.FetchState.Success)
-        val state = viewModel.fetchState.value as MainViewModel.FetchState.Success
 
-        assert(state.yesno.answer == "yes")
+        val repository = DefaultYesNoRepository(dataSource)
+        val viewModel = MainViewModel(repository)
+
+        viewModel.processFetch()
+
+        coVerify { dataSource.fetch() }
+
+        val list = viewModel.fetchState.take(2).toList()
+        assertThat(list[0]).isInstanceOf(MainViewModel.FetchState.Fetching::class.java)
+        assertThat(list[1]).isInstanceOf(MainViewModel.FetchState.Success::class.java)
     }
 
     @Test
-    fun testNo() {
-        // 必ず noを返すモックオブジェクトを作る
-        val mockRepository = mockk<YesNoRepository>()
-        coEvery { mockRepository.fetch() } returns YesNo(
-            answer = "no",
-            forced = false,
-            image = "https://yesno.wtf/assets/yes/5-64c2804cc48057b94fd0b3eaf323d92c.gif"
-        )
+    fun testNo() = runTest {
+        val dataSource = mockk<YesNoDataSource>()
 
-        val viewModel = MainViewModel(mockRepository)
+        coEvery { dataSource.fetch() } coAnswers {
+            delay(30)
 
-        runBlocking {
-            viewModel.processFetch()
-            coVerify { mockRepository.fetch() }
+            YesNo(
+                answer = "no",
+                forced = false,
+                image = "https://yesno.wtf/assets/yes/5-64c2804cc48057b94fd0b3eaf323d92c.gif"
+            )
         }
-        // TODO viewModel.fetchState を observeする
-        //      mokK, spekを学ぶ必要がありそう
-        assert(viewModel.fetchState.value is MainViewModel.FetchState.Success)
-        val state = viewModel.fetchState.value as MainViewModel.FetchState.Success
+        val repository = DefaultYesNoRepository(dataSource)
+        val viewModel = MainViewModel(repository)
 
-        assert(state.yesno.answer == "no")
+        viewModel.processFetch()
+
+        coVerify { dataSource.fetch() }
+
+        val list = viewModel.fetchState.take(2).toList()
+        assertThat(list[0]).isInstanceOf(MainViewModel.FetchState.Fetching::class.java)
+        assertThat(list[1]).isInstanceOf(MainViewModel.FetchState.Success::class.java)
     }
 
     @Test
-    fun testMaybe() {
-        // 必ず maybeを返すモックオブジェクトを作る
-        val mockRepository = mockk<YesNoRepository>()
-        coEvery { mockRepository.fetch() } returns YesNo(
-            answer = "maybe",
-            forced = false,
-            image = "https://yesno.wtf/assets/yes/5-64c2804cc48057b94fd0b3eaf323d92c.gif"
-        )
+    fun testMaybe() = runTest {
+        val dataSource = mockk<YesNoDataSource>()
 
-        val viewModel = MainViewModel(mockRepository)
+        coEvery { dataSource.fetch() } coAnswers {
+            delay(30)
 
-        runBlocking {
-            viewModel.processFetch()
-            coVerify { mockRepository.fetch() }
+            YesNo(
+                answer = "maybe",
+                forced = false,
+                image = "https://yesno.wtf/assets/yes/5-64c2804cc48057b94fd0b3eaf323d92c.gif"
+            )
         }
+        val repository = DefaultYesNoRepository(dataSource)
+        val viewModel = MainViewModel(repository)
 
-        assert(viewModel.fetchState.value is MainViewModel.FetchState.Success)
-        val state = viewModel.fetchState.value as MainViewModel.FetchState.Success
+        viewModel.processFetch()
 
-        assert(state.yesno.answer == "maybe")
+        coVerify { dataSource.fetch() }
+
+        val list = viewModel.fetchState.take(2).toList()
+        assertThat(list[0]).isInstanceOf(MainViewModel.FetchState.Fetching::class.java)
+        assertThat(list[1]).isInstanceOf(MainViewModel.FetchState.Success::class.java)
     }
 
     @Test
-    fun testNetworkError() {
-        val mockRepository = mockk<YesNoRepository>()
-        coEvery { mockRepository.fetch() } throws Exception("TEST")
+    fun testNetworkError() = runTest {
+        val dataSource = mockk<YesNoDataSource>()
 
-        val viewModel = MainViewModel(mockRepository)
-
-        runBlocking {
-            viewModel.processFetch()
-            coVerify { mockRepository.fetch() }
+        coEvery { dataSource.fetch() } coAnswers {
+            delay(30)
+            throw IOException()
         }
 
-        assert(viewModel.fetchState.value is MainViewModel.FetchState.Fail)
+        val repository = DefaultYesNoRepository(dataSource)
+        val viewModel = MainViewModel(repository)
+
+        viewModel.processFetch()
+
+        coVerify { dataSource.fetch() }
+
+        val list = viewModel.fetchState.take(2).toList()
+        assertThat(list[0]).isInstanceOf(MainViewModel.FetchState.Fetching::class.java)
+        assertThat(list[1]).isInstanceOf(MainViewModel.FetchState.Fail::class.java)
     }
 }
