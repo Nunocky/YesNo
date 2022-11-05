@@ -17,7 +17,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "com.example.yesno.CustomTestRunner"
+        testInstrumentationRunner "com.example.yesno.util.CustomTestRunner"
     }
 
     buildTypes {

@@ -1,4 +1,4 @@
-package com.example.yesno
+package com.example.yesno.util
 
 import android.view.View
 import androidx.test.espresso.NoMatchingViewException

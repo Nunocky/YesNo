@@ -1,4 +1,4 @@
-package com.example.yesno
+package com.example.yesno.util
 
 import android.view.View
 import androidx.test.espresso.Espresso.onView
@@ -6,7 +6,7 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
-import com.example.yesno.EspressoExtensions.Companion.searchFor
+import com.example.yesno.util.EspressoExtensions.Companion.searchFor
 import org.hamcrest.Matcher
 import java.lang.Thread.sleep
 

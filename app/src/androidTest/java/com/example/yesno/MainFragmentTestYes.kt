@@ -9,6 +9,7 @@ import com.example.yesno.di.YesNoDataSourceModule
 import com.example.yesno.repository.YesNoDataSource
 import com.example.yesno.scene.main.MainFragment
 import com.example.yesno.scene.main.MainViewModel
+import com.example.yesno.util.BaseRobot
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
