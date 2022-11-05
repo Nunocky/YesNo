@@ -1,5 +1,6 @@
 package com.example.yesno.scene.main
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -18,11 +19,11 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val repository: YesNoRepository
 ) : ViewModel() {
-    sealed class FetchState {
-        object Init : FetchState()
-        object Fetching : FetchState()
-        class Success(val yesno: YesNo) : FetchState()
-        class Fail(val th: Throwable) : FetchState()
+    sealed interface FetchState {
+        object Init : FetchState
+        object Fetching : FetchState
+        class Success(val yesno: YesNo) : FetchState
+        class Fail(val th: Throwable) : FetchState
     }
 
     private val _fetchState = MutableStateFlow<FetchState>(FetchState.Init)
@@ -45,8 +46,8 @@ class MainViewModel @Inject constructor(
 
         withContext(Dispatchers.IO) {
             repository.fetch()
-                .onSuccess {
-                    _fetchState.value = FetchState.Success(it)
+                .onSuccess { yesno ->
+                    _fetchState.value = FetchState.Success(yesno)
                 }
                 .onFailure {
                     _fetchState.value = FetchState.Fail(it)
