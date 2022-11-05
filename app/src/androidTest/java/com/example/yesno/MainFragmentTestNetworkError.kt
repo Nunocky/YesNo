@@ -58,14 +58,17 @@ class MainFragmentTestNetworkError {
             fetchState = (this as MainFragment).viewModel.fetchState
         }
 
+        Thread.sleep(1000)
         onView(withId(R.id.button)).perform(click())
 
         val list = fetchState.take(2).toList()
         assertThat(list[0]).isInstanceOf(MainViewModel.FetchState.Fetching::class.java)
         assertThat(list[1]).isInstanceOf(MainViewModel.FetchState.Fail::class.java)
 
+
         // ダイアログが表示されてタイトルが "Error"となっていること をテスト
-        onView(withText("Error")).check(matches(isDisplayed()))
+        BaseRobot().assertOnView(withText("Error"), matches(isDisplayed()))
+//        onView(withText("Error")).check(matches(isDisplayed()))
 
         // Close ボタンを押したらダイアログが消える
         onView(withText("Close")).perform(click())

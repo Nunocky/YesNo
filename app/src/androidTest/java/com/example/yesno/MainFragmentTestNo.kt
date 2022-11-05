@@ -58,12 +58,13 @@ class MainFragmentTestNo {
             fetchState = (this as MainFragment).viewModel.fetchState
         }
 
+        Thread.sleep(1000)
         onView(withId(R.id.button)).perform(click())
 
         val list = fetchState.take(2).toList()
         assertThat(list[0]).isInstanceOf(MainViewModel.FetchState.Fetching::class.java)
         assertThat(list[1]).isInstanceOf(MainViewModel.FetchState.Success::class.java)
 
-        onView(withId(R.id.textView)).check(matches(withText("no")))
+        BaseRobot().assertOnView(withText("no"), matches(isDisplayed()))
     }
 }

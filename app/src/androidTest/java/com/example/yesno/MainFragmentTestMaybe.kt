@@ -3,6 +3,7 @@ package com.example.yesno
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.filters.LargeTest
@@ -23,6 +24,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import java.lang.Thread.sleep
 
 @LargeTest
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -58,12 +60,13 @@ class MainFragmentTestMaybe {
             fetchState = (this as MainFragment).viewModel.fetchState
         }
 
+        sleep(300)
         onView(withId(R.id.button)).perform(click())
 
         val list = fetchState.take(2).toList()
         assertThat(list[0]).isInstanceOf(MainViewModel.FetchState.Fetching::class.java)
         assertThat(list[1]).isInstanceOf(MainViewModel.FetchState.Success::class.java)
 
-        onView(withId(R.id.textView)).check(matches(withText("maybe")))
+        BaseRobot().assertOnView(withText("maybe"), matches(ViewMatchers.isDisplayed()))
     }
 }
