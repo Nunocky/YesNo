@@ -15,7 +15,6 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -63,7 +62,7 @@ class MainFragmentTestNo {
             fetchState = (this as MainFragment).viewModel.fetchState
         }
 
-        Thread.sleep(1000)
+//        Thread.sleep(1000)
         onView(withId(R.id.button)).perform(click())
 
         val list = fetchState.take(2).toList()

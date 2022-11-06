@@ -17,7 +17,6 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -29,7 +28,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.lang.Thread.sleep
 
 @LargeTest
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -65,7 +63,7 @@ class MainFragmentTestMaybe {
             fetchState = (this as MainFragment).viewModel.fetchState
         }
 
-        sleep(300)
+//        sleep(300)
         onView(withId(R.id.button)).perform(click())
 
         val list = fetchState.take(2).toList()
