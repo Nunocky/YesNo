@@ -11,6 +11,10 @@ import com.example.yesno.scene.main.MainFragment
 import com.example.yesno.scene.main.MainViewModel
 import com.example.yesno.util.BaseRobot
 import com.google.common.truth.Truth.assertThat
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -30,16 +34,16 @@ import org.junit.Test
 @HiltAndroidTest
 class MainFragmentTestYes {
 
-//    @Module
-//    @InstallIn(ViewModelComponent::class)
-//    abstract class FakeYesDataSourceModule {
-//        @Binds
-//        abstract fun bindYesNoDataSource(dataSource: FakeYesDataSource): YesNoDataSource
-//    }
+    @Module
+    @InstallIn(ViewModelComponent::class)
+    abstract class FakeYesDataSourceModule {
+        @Binds
+        abstract fun bindYesNoDataSource(dataSource: FakeYesDataSource): YesNoDataSource
+    }
 
-    @BindValue
-    @JvmField
-    val dataSource: YesNoDataSource = FakeYesDataSource()
+//    @BindValue
+//    @JvmField
+//    val dataSource: YesNoDataSource = FakeYesDataSource()
 
     @get:Rule(order = 0)
     var hiltRule = HiltAndroidRule(this)

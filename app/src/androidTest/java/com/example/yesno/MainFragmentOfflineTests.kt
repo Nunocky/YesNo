@@ -10,4 +10,4 @@ import org.junit.runners.Suite
     MainFragmentTestMaybe::class,
     MainFragmentTestNetworkError::class,
 )
-class MainFragmentAllTests
+class MainFragmentOfflineTests
