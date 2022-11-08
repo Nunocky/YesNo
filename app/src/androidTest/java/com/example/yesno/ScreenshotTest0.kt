@@ -2,6 +2,9 @@ package com.example.yesno
 
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.filters.LargeTest
 import androidx.test.rule.GrantPermissionRule
@@ -40,7 +43,15 @@ class ScreenshotTest0 {
     @Test
     fun test0() {
         activityScenarioRule.scenario.onActivity {
-            val file = spoon.screenshot(it, "xxx")
+            spoon.screenshot(it, "xxx")
+        }
+
+        onView(withText("CLICK!")).perform(click())
+
+        Thread.sleep(10000)
+
+        activityScenarioRule.scenario.onActivity {
+            spoon.screenshot(it, "xxx1")
         }
     }
 }
