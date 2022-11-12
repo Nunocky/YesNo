@@ -155,4 +155,6 @@ dependencies {
     testImplementation "io.mockk:mockk-agent:${versions.mockkVersion}"
     androidTestImplementation "io.mockk:mockk-android:${versions.mockkVersion}"
     androidTestImplementation "io.mockk:mockk-agent:${versions.mockkVersion}"
+
+    implementation 'com.localebro:okhttpprofiler:1.0.8'
 }

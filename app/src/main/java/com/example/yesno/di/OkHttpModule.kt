@@ -1,5 +1,6 @@
 package com.example.yesno.di
 
+import com.localebro.okhttpprofiler.OkHttpProfilerInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,6 +15,8 @@ object OkHttpModule {
     @Singleton
     @Provides
     fun provideOkHttpClient(): OkHttpClient {
-        return OkHttpClient.Builder().build()
+        return OkHttpClient.Builder().apply {
+            addInterceptor(OkHttpProfilerInterceptor())
+        }.build()
     }
 }
